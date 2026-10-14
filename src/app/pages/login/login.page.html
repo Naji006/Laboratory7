@@ -1,51 +1,166 @@
-
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>Student Directory</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content class="ion-padding">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Student Login</ion-card-title>
-    </ion-card-header>
-
-    <ion-card-content>
-      <ion-item>
-        <ion-input
-          label="Student ID"
-          labelPlacement="stacked"
-          [(ngModel)]="studentId">
-        </ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-input
-          label="Password"
-          type="password"
-          labelPlacement="stacked"
-          [(ngModel)]="password">
-        </ion-input>
-      </ion-item>
-
-      <ion-text color="danger">
-        <p>{{ message }}</p>
-      </ion-text>
-
-      <ion-button
-        expand="block"
-        (click)="login()"
-        [disabled]="isLoading">
-        {{ isLoading ? 'Logging in...' : 'Log In' }}
-      </ion-button>
-
-      <ion-button
-        expand="block"
-        fill="clear"
-        routerLink="/register">
-        Create a new account
-      </ion-button>
-    </ion-card-content>
-  </ion-card>
+<ion-content>
+  <main class="login-layout">
+    <section class="welcome-panel">
+      <div class="eyebrow">
+        <span class="tiny-line"></span> CONNECTED BY CAMPUS
+      </div>
+      <h1>
+        A familiar face.<br />A new connection<span class="gold-dot">.</span>
+      </h1>
+      <p class="welcome-copy">
+        Find your classmates, stay connected, and be part of<br
+          class="desktop-break"
+        />
+        the NEUST community. It all starts here.
+      </p>
+      <div class="campus-art" aria-hidden="true">
+        <div class="art-orbit orbit-one"></div>
+        <div class="art-orbit orbit-two"></div>
+        <div class="art-spark spark-one">✦</div>
+        <div class="art-spark spark-two">✦</div>
+        <div class="floating-label label-one">
+          <span class="mini-avatar">JD</span>
+          <div>
+            New connections<small>A community that grows with you</small>
+          </div>
+          <span class="label-dot"></span>
+        </div>
+        <svg class="building" viewBox="0 0 580 290" fill="none">
+          <path d="M40 260H550" stroke="#9bb0c4" stroke-width="2" />
+          <path d="M93 139h125v121H93zM362 139h125v121H362z" fill="#dce6ef" />
+          <path d="M83 130h145v14H83zM352 130h145v14H352z" fill="#9cafc2" />
+          <path d="M213 106h155v154H213z" fill="#f3f6fa" />
+          <path d="m196 106 95-60 94 60H196Z" fill="#cad8e5" />
+          <path d="m218 99 73-45 72 45H218Z" fill="#edf2f7" />
+          <path d="M280 58v-35" stroke="#607d99" stroke-width="3" />
+          <path d="M282 24h37v20h-37" fill="#e9b94c" />
+          <path
+            d="M232 123h19v112h-19zM268 123h19v112h-19zM305 123h19v112h-19zM341 123h9v112h-9z"
+            fill="#c4d3e1"
+          />
+          <path d="M281 216a14 14 0 0 1 28 0v44h-28z" fill="#284d70" />
+          <path d="M219 239h148v10H219zM206 249h174v11H206z" fill="#b4c7d9" />
+          <path
+            d="M110 157h21v25h-21zM149 157h21v25h-21zM184 157h20v25h-20zM110 198h21v25h-21zM149 198h21v25h-21zM184 198h20v25h-20zM380 157h21v25h-21zM419 157h21v25h-21zM453 157h20v25h-20zM380 198h21v25h-21zM419 198h21v25h-21zM453 198h20v25h-20z"
+            fill="#718ca5"
+          />
+          <path d="M65 260v-59M520 260v-62" stroke="#667f76" stroke-width="6" />
+          <ellipse cx="64" cy="195" rx="27" ry="38" fill="#99b3a3" />
+          <ellipse cx="520" cy="190" rx="28" ry="42" fill="#99b3a3" />
+          <circle cx="291" cy="90" r="10" fill="#e3b348" />
+          <path d="m287 90 3 3 5-6" stroke="white" stroke-width="2" />
+        </svg>
+        <div class="floating-label label-two">
+          <span class="check-badge">✓</span>
+          <div>One campus. Many possibilities.</div>
+        </div>
+      </div>
+      <div class="university-caption">
+        <span class="university-monogram">N</span>
+        <div>
+          Nueva Ecija University of Science and Technology<small
+            >College of Information and Communications Technology</small
+          >
+        </div>
+      </div>
+    </section>
+    <section class="signin-panel">
+      <div class="login-card">
+        <span class="section-label">YOUR CAMPUS CONNECTION</span>
+        <h2>Welcome back<span class="gold-dot">.</span></h2>
+        <p class="muted intro">
+          Log in to find your people and manage your profile.
+        </p>
+        <form #form="ngForm" (ngSubmit)="form.valid && login()">
+          <label for="student-id">Student ID</label>
+          <div class="input-wrap">
+            <span class="input-icon" aria-hidden="true">▤</span
+            ><input
+              id="student-id"
+              name="studentId"
+              [(ngModel)]="studentId"
+              placeholder="e.g. 2026-0001"
+              autocomplete="username"
+              required
+              [disabled]="loading"
+            />
+          </div>
+          <label for="password">Password</label>
+          <div class="input-wrap">
+            <svg
+              class="input-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <rect x="5" y="10" width="14" height="11" rx="2" />
+              <path d="M8 10V6a4 4 0 0 1 8 0v4" /></svg
+            ><input
+              id="password"
+              name="password"
+              [(ngModel)]="password"
+              [type]="showPassword ? 'text' : 'password'"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              required
+              [disabled]="loading"
+            /><button
+              type="button"
+              class="eye-button"
+              (click)="showPassword = !showPassword"
+              [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </button>
+          </div>
+          <p class="secure-note">
+            <span aria-hidden="true">♧</span> Your account is securely connected
+            to NEUST.
+          </p>
+          @if (message) {
+          <div class="feedback error" role="alert">{{ message }}</div>
+          }
+          <button class="primary-button" type="submit" [disabled]="loading">
+            {{ loading ? 'Logging in…' : 'Log in' }}
+            <span aria-hidden="true">→</span>
+          </button>
+        </form>
+        <div class="signup-prompt">
+          New to the community?
+          <a routerLink="/register"
+            >Create an account <span aria-hidden="true">↗</span></a
+          >
+        </div>
+        <div class="card-divider"></div>
+        <div class="access-note">
+          <span class="note-icon" aria-hidden="true">ⓘ</span>
+          <p>
+            Made for NEUST students.<br /><span
+              >Use your registered Student ID to get started.</span
+            >
+          </p>
+        </div>
+      </div>
+      <div class="signin-footer">
+        <span class="small-shield" aria-hidden="true">◇</span> A little more
+        connected, every day.
+      </div>
+    </section>
+  </main>
+  <footer class="page-footer">
+    <span>© {{ 2026 }} Campus Connect</span
+    ><span
+      >Built for students. Powered by community.
+      <span class="footer-dot"></span> NEUST</span
+    >
+  </footer>
 </ion-content>

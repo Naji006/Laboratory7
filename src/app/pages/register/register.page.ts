@@ -1,89 +1,53 @@
-
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {
-  IonContent, IonHeader, IonToolbar, IonTitle,
-  IonItem, IonInput, IonButton, IonText, IonSelect,
-  IonSelectOption, IonCard, IonCardHeader, IonCardTitle,
-  IonCardContent, IonLabel, IonBackButton, IonButtons
-} from '@ionic/angular/standalone';
-import { Router } from '@angular/router';
-import { ApiService } from '../../services/api.service';
-
+import { RouterLink } from '@angular/router';
+import { IonContent } from '@ionic/angular';
+import { ApiService, Registration, apiError } from '../../services/api';
 @Component({
   selector: 'app-register',
   templateUrl: './register.page.html',
-  styleUrls: ['./register.page.scss'],
-  standalone: true,
-  imports: [
-    CommonModule, FormsModule, IonContent, IonHeader,
-    IonToolbar, IonTitle, IonItem, IonInput, IonButton,
-    IonText, IonSelect, IonSelectOption, IonCard,
-    IonCardHeader, IonCardTitle, IonCardContent,
-    IonLabel, IonBackButton, IonButtons
-  ]
+  imports: [FormsModule, RouterLink, IonContent],
 })
 export class RegisterPage {
-  registrationToken = '';
-  studentId = '';
-  studentName = '';
-  password = '';
-  section = 'BSIT-3Z';
-  email = '';
-  mobileNumber = '';
-  socialLink = '';
-  profilePictureUrl = '';
-
+  private readonly changeDetector = inject(ChangeDetectorRef);
+  api = inject(ApiService);
+  data: Registration = {
+    student_id: '',
+    student_name: '',
+    registration_token: '',
+    password: '',
+    section: '',
+    email: '',
+    mobile_number: '',
+    social_media_link: '',
+    profile_picture_url: '',
+  };
+  loading = false;
   message = '';
-  isLoading = false;
-
-  constructor(
-    private api: ApiService,
-    private router: Router
-  ) {}
-
+  success = false;
   register() {
+    if (this.loading) return;
+    this.loading = true;
     this.message = '';
-
-    if (
-      !this.registrationToken.trim() ||
-      !this.studentId.trim() ||
-      !this.studentName.trim() ||
-      !this.password ||
-      !this.email.trim()
-    ) {
-      this.message = 'Please complete all required fields.';
-      return;
-    }
-
-    const body = {
-      registration_token: this.registrationToken.trim(),
-      student_id: this.studentId.trim(),
-      student_name: this.studentName.trim(),
-      password: this.password,
-      section: this.section,
-      email: this.email.trim(),
-      mobile_number: this.mobileNumber.trim(),
-      social_media_link: this.socialLink.trim(),
-      profile_picture_url: this.profilePictureUrl.trim()
-    };
-
-    this.isLoading = true;
-
+    this.success = false;
+    const body = { ...this.data };
+    for (const key of Object.keys(body) as (keyof Registration)[])
+      if (key !== 'password') body[key] = body[key].trim();
     this.api.register(body).subscribe({
-      next: () => {
-        this.isLoading = false;
-        this.message = 'Registration successful! You can now log in.';
-        this.router.navigate(['/login']);
-      },
-      error: (err) => {
-        this.isLoading = false;
+      next: (res) => {
+        this.loading = false;
+        this.changeDetector.markForCheck();
+        this.success = true;
         this.message =
-          err.error?.error?.message ||
-          err.error?.message ||
-          'Registration failed. Check your details and registration token.';
-      }
+          res.message || 'Account created successfully. You can now log in.';
+        this.data.password = '';
+        this.data.registration_token = '';
+      },
+      error: (error) => {
+        this.loading = false;
+        this.changeDetector.markForCheck();
+        this.message = apiError(error);
+      },
     });
   }
 }

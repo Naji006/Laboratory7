@@ -1,13 +1,122 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>update-profile</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">update-profile</ion-title>
-    </ion-toolbar>
-  </ion-header>
-</ion-content>
+<ion-content
+  ><main class="inner-page form-page">
+    <a class="back-link" routerLink="/student-directory">← Back to directory</a>
+    <div class="page-heading">
+      <span class="section-label">A LITTLE ABOUT YOU</span>
+      <h1>Make yourself known<span class="gold-dot">.</span></h1>
+      <p class="muted">
+        Keep your details up to date so your classmates can stay in touch.
+      </p>
+    </div>
+    <section class="form-card">
+      <div class="form-card-heading">
+        <span class="profile-avatar"
+          >{{ api.student()?.student_name?.charAt(0) }}</span
+        >
+        <div>
+          <h2>{{ api.student()?.student_name }}</h2>
+          <p>Student ID · {{ api.student()?.student_id }}</p>
+        </div>
+        <span class="section-chip">{{ api.student()?.section }}</span>
+      </div>
+      <form #form="ngForm" (ngSubmit)="form.valid && update()">
+        <div class="form-grid">
+          <div class="field">
+            <label for="student_name">Full name</label
+            ><input
+              id="student_name"
+              name="student_name"
+              type="text"
+              [(ngModel)]="data.student_name"
+              placeholder="Your full name"
+              autocomplete="name"
+              required
+              [disabled]="loading"
+            />
+          </div>
+          <div class="field">
+            <label for="section">Section</label
+            ><input
+              id="section"
+              name="section"
+              type="text"
+              [(ngModel)]="data.section"
+              placeholder="e.g. BSIT-3Z"
+              autocomplete="off"
+              required
+              [disabled]="loading"
+            />
+          </div>
+          <div class="field">
+            <label for="email">Email address</label
+            ><input
+              id="email"
+              name="email"
+              type="email"
+              [(ngModel)]="data.email"
+              placeholder="you@example.com"
+              autocomplete="email"
+              required
+              [disabled]="loading"
+            />
+          </div>
+          <div class="field">
+            <label for="mobile_number"
+              >Mobile number <span>(optional)</span></label
+            ><input
+              id="mobile_number"
+              name="mobile_number"
+              type="tel"
+              [(ngModel)]="data.mobile_number"
+              placeholder="e.g. 09123456789"
+              autocomplete="tel"
+              [disabled]="loading"
+            />
+          </div>
+          <div class="field">
+            <label for="social_media_link"
+              >Social profile URL <span>(optional)</span></label
+            ><input
+              id="social_media_link"
+              name="social_media_link"
+              type="url"
+              [(ngModel)]="data.social_media_link"
+              placeholder="https://facebook.com/your-profile"
+              autocomplete="url"
+              [disabled]="loading"
+            />
+          </div>
+          <div class="field">
+            <label for="profile_picture_url"
+              >Profile photo URL <span>(optional)</span></label
+            ><input
+              id="profile_picture_url"
+              name="profile_picture_url"
+              type="url"
+              [(ngModel)]="data.profile_picture_url"
+              placeholder="https://example.com/photo.jpg"
+              autocomplete="url"
+              [disabled]="loading"
+            />
+          </div>
+        </div>
+        @if (message) {
+        <div
+          class="feedback"
+          [class.success]="success"
+          [class.error]="!success"
+          role="status"
+        >
+          {{ message }}
+        </div>
+        }
+        <div class="form-actions">
+          <a class="back-link" routerLink="/student-directory">Cancel</a
+          ><button class="primary-button" type="submit" [disabled]="loading">
+            {{ loading ? 'Saving changes…' : 'Save changes' }} →
+          </button>
+        </div>
+      </form>
+    </section>
+  </main></ion-content
+>

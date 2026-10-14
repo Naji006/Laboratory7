@@ -1,29 +1,36 @@
-import { Routes } from '@angular/router';
-
+import { inject } from '@angular/core';
+import { CanActivateFn, Router, Routes } from '@angular/router';
+import { ApiService } from './services/api';
+const authenticated: CanActivateFn = () =>
+  inject(ApiService).authenticated || inject(Router).createUrlTree(['/login']);
 export const routes: Routes = [
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'home', redirectTo: 'login', pathMatch: 'full' },
   {
-    path: 'home',
-    loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
-  },
-  {
-    path: '',
-    redirectTo: 'home',
-    pathMatch: 'full',
+    path: 'login',
+    loadComponent: () =>
+      import('./pages/login/login.page').then((m) => m.LoginPage),
   },
   {
     path: 'register',
-    loadComponent: () => import('./pages/register/register.page').then( m => m.RegisterPage)
-  },
-  {
-    path: 'login',
-    loadComponent: () => import('./pages/login/login.page').then( m => m.LoginPage)
+    loadComponent: () =>
+      import('./pages/register/register.page').then((m) => m.RegisterPage),
   },
   {
     path: 'student-directory',
-    loadComponent: () => import('./pages/student-directory/student-directory.page').then( m => m.StudentDirectoryPage)
+    canActivate: [authenticated],
+    loadComponent: () =>
+      import('./pages/student-directory/student-directory.page').then(
+        (m) => m.StudentDirectoryPage,
+      ),
   },
   {
     path: 'update-profile',
-    loadComponent: () => import('./pages/update-profile/update-profile.page').then( m => m.UpdateProfilePage)
+    canActivate: [authenticated],
+    loadComponent: () =>
+      import('./pages/update-profile/update-profile.page').then(
+        (m) => m.UpdateProfilePage,
+      ),
   },
+  { path: '**', redirectTo: 'login' },
 ];
