@@ -1,3 +1,37 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+  <header class="topbar" [class.has-session]="api.authenticated">
+    <a
+      class="brand"
+      [routerLink]="api.authenticated ? '/student-directory' : '/login'"
+      aria-label="Campus Connect home"
+    >
+      <span class="brand-mark"
+        ><svg viewBox="0 0 32 32" aria-hidden="true">
+          <path
+            d="m3 12 13-7 13 7-13 7-13-7Zm5 5v7c5 4 11 4 16 0v-7M29 13v10"
+          /></svg
+      ></span>
+      <span
+        >campus<span class="brand-light">connect</span
+        ><small>NEUST STUDENT DIRECTORY</small></span
+      >
+    </a>
+    <nav class="topnav" aria-label="Main navigation">
+      @if (api.authenticated) {
+        <a routerLink="/student-directory" routerLinkActive="active"
+          >Directory</a
+        >
+        <a routerLink="/update-profile" routerLinkActive="active">My profile</a>
+        <button class="nav-button" (click)="logout()">
+          Log out <span aria-hidden="true">↗</span>
+        </button>
+      } @else {
+        <span class="nav-caption">Your campus. Your community.</span>
+        <a routerLink="/register" class="nav-button"
+          >Create an account <span aria-hidden="true">↗</span></a
+        >
+      }
+    </nav>
+  </header>
+  <div class="app-outlet"><ion-router-outlet></ion-router-outlet></div>
 </ion-app>

@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
 import { UpdateProfilePage } from './update-profile.page';
 
 describe('UpdateProfilePage', () => {
@@ -6,6 +8,9 @@ describe('UpdateProfilePage', () => {
   let fixture: ComponentFixture<UpdateProfilePage>;
 
   beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideHttpClient(), provideRouter([])],
+    });
     fixture = TestBed.createComponent(UpdateProfilePage);
     component = fixture.componentInstance;
     fixture.detectChanges();

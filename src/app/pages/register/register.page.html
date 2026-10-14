@@ -1,13 +1,164 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>register</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">register</ion-title>
-    </ion-toolbar>
-  </ion-header>
-</ion-content>
+<ion-content
+  ><main class="inner-page form-page">
+    <a class="back-link" routerLink="/login">← Back to login</a>
+    <div class="page-heading">
+      <span class="section-label">JOIN THE COMMUNITY</span>
+      <h1>Your connection starts here<span class="gold-dot">.</span></h1>
+      <p class="muted">
+        Create your student account and make yourself part of the directory.
+      </p>
+    </div>
+    <section class="form-card">
+      <div class="form-card-heading">
+        <span class="step-circle">01</span>
+        <div>
+          <h2>Student registration</h2>
+          <p>Tell us a little about yourself.</p>
+        </div>
+      </div>
+      @if (success) {
+      <div class="feedback success" role="status">{{ message }}</div>
+      <a class="primary-button" routerLink="/login">Continue to login →</a> }
+      @else {
+      <form #form="ngForm" (ngSubmit)="form.valid && register()">
+        <div class="token-note">
+          ⓘ You’ll need the class registration token provided by your
+          instructor.
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="registration_token">Class registration token</label
+            ><input
+              id="registration_token"
+              name="registration_token"
+              type="password"
+              [(ngModel)]="data.registration_token"
+              placeholder="Enter your class token"
+              autocomplete="off"
+              required
+              [disabled]="loading"
+            />
+          </div>
+          <div class="field">
+            <label for="student_id">Student ID</label
+            ><input
+              id="student_id"
+              name="student_id"
+              type="text"
+              [(ngModel)]="data.student_id"
+              placeholder="e.g. 2026-0001"
+              autocomplete="username"
+              required
+              [disabled]="loading"
+            />
+          </div>
+          <div class="field">
+            <label for="student_name">Full name</label
+            ><input
+              id="student_name"
+              name="student_name"
+              type="text"
+              [(ngModel)]="data.student_name"
+              placeholder="Your full name"
+              autocomplete="name"
+              required
+              [disabled]="loading"
+            />
+          </div>
+          <div class="field">
+            <label for="section">Section</label
+            ><input
+              id="section"
+              name="section"
+              type="text"
+              [(ngModel)]="data.section"
+              placeholder="e.g. BSIT-3Z"
+              autocomplete="off"
+              required
+              [disabled]="loading"
+            />
+          </div>
+          <div class="field">
+            <label for="email">Email address</label
+            ><input
+              id="email"
+              name="email"
+              type="email"
+              [(ngModel)]="data.email"
+              placeholder="you@example.com"
+              autocomplete="email"
+              required
+              [disabled]="loading"
+            />
+          </div>
+          <div class="field">
+            <label for="mobile_number"
+              >Mobile number <span>(optional)</span></label
+            ><input
+              id="mobile_number"
+              name="mobile_number"
+              type="tel"
+              [(ngModel)]="data.mobile_number"
+              placeholder="e.g. 09123456789"
+              autocomplete="tel"
+              [disabled]="loading"
+            />
+          </div>
+          <div class="field">
+            <label for="social_media_link"
+              >Social profile URL <span>(optional)</span></label
+            ><input
+              id="social_media_link"
+              name="social_media_link"
+              type="url"
+              [(ngModel)]="data.social_media_link"
+              placeholder="https://facebook.com/your-profile"
+              autocomplete="url"
+              [disabled]="loading"
+            />
+          </div>
+          <div class="field">
+            <label for="profile_picture_url"
+              >Profile photo URL <span>(optional)</span></label
+            ><input
+              id="profile_picture_url"
+              name="profile_picture_url"
+              type="url"
+              [(ngModel)]="data.profile_picture_url"
+              placeholder="https://example.com/photo.jpg"
+              autocomplete="url"
+              [disabled]="loading"
+            />
+          </div>
+          <div class="field">
+            <label for="password">Password</label
+            ><input
+              id="password"
+              name="password"
+              type="password"
+              [(ngModel)]="data.password"
+              placeholder="Create a password"
+              autocomplete="new-password"
+              required
+              [disabled]="loading"
+            />
+          </div>
+        </div>
+        @if (message) {
+        <div class="feedback error" role="alert">{{ message }}</div>
+        }
+        <div class="form-actions">
+          <span class="muted"
+            >Already registered? <a routerLink="/login">Log in</a></span
+          ><button class="primary-button" [disabled]="loading" type="submit">
+            {{ loading ? 'Creating account…' : 'Create account' }} →
+          </button>
+        </div>
+      </form>
+      }
+    </section>
+  </main>
+  <footer class="page-footer">
+    <span>© 2026 Campus Connect</span><span>Your campus. Your community.</span>
+  </footer></ion-content
+>

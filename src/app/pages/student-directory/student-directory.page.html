@@ -1,13 +1,168 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>student-directory</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">student-directory</ion-title>
-    </ion-toolbar>
-  </ion-header>
-</ion-content>
+<ion-content
+  ><main class="inner-page directory-page">
+    <div class="directory-heading">
+      <div>
+        <span class="section-label">YOUR CAMPUS COMMUNITY</span>
+        <h1>
+          Good to see you, {{ api.student()?.student_name?.split(' ')?.[0]
+          }}<span class="gold-dot">.</span>
+        </h1>
+        <p class="muted">
+          A place to find familiar faces and make new connections.
+        </p>
+      </div>
+      <a class="outline-button" routerLink="/update-profile"
+        >Edit my profile ↗</a
+      >
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-symbol">♧</span>
+        <p>Total students</p>
+        <strong>{{ students.length }}</strong
+        ><small>People in your community</small>
+      </div>
+      <div class="stat-card">
+        <span class="stat-symbol">▤</span>
+        <p>Active sections</p>
+        <strong>{{ sections.length }}</strong
+        ><small>Connected across classrooms</small>
+      </div>
+      <div class="stat-card">
+        <span class="stat-symbol">◉</span>
+        <p>Profile completion</p>
+        <strong>{{ completion }}<span>%</span></strong
+        ><small>Students with a profile photo</small>
+      </div>
+    </div>
+    <section class="directory-card">
+      <div class="directory-title">
+        <div>
+          <h2>
+            Student directory
+            <span class="count-chip">{{ students.length }}</span>
+          </h2>
+          <p class="muted">Your next connection is a search away.</p>
+        </div>
+        <button class="outline-button" (click)="load()" [disabled]="loading">
+          ↻ {{ loading ? 'Refreshing…' : 'Refresh' }}
+        </button>
+      </div>
+      <div class="directory-filters">
+        <div class="search-box">
+          <span aria-hidden="true"
+            ><svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
+              <circle cx="10" cy="10" r="6" />
+              <path d="m15 15 5 5" /></svg></span
+          ><input
+            aria-label="Search students"
+            name="search"
+            [(ngModel)]="search"
+            placeholder="Search by name, student ID, or email…"
+          />
+        </div>
+        <select aria-label="Filter by section" [(ngModel)]="section">
+          <option value="">All sections</option>
+          @for (s of sections; track s) {
+          <option [value]="s">{{ s }}</option>
+          }
+        </select>
+      </div>
+      @if (message) {
+      <p class="directory-message" role="status">{{ message }}</p>
+      }@if (loading) {
+      <div class="empty-state">
+        <span class="loader"></span>
+        <h3>Connecting to your campus…</h3>
+        <p>Loading the latest student directory.</p>
+      </div>
+      } @else if (!filtered.length) {
+      <div class="empty-state">
+        <span class="empty-icon" aria-hidden="true"
+          ><svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <circle cx="10" cy="10" r="6" />
+            <path d="m15 15 5 5" /></svg
+        ></span>
+        <h3>
+          {{ search || section ? 'No matching students' : 'No students to
+          display' }}
+        </h3>
+        <p>
+          {{ search || section ? 'Try another name or choose a different
+          section.' : 'Refresh the directory to try again.' }}
+        </p>
+      </div>
+      } @else {
+      <div class="student-table">
+        <div class="table-head">
+          <span>STUDENT</span><span>SECTION</span><span>CONTACT DETAILS</span
+          ><span>SOCIAL</span>
+        </div>
+        @for (student of filtered; track student.student_id) {
+        <article class="student-row">
+          <div class="student-identity">
+            <span class="profile-avatar"
+              >@if (safeUrl(student.profile_picture_url) &&
+              !failedImages.has(student.student_id)) {
+              <img
+                [src]="safeUrl(student.profile_picture_url)"
+                alt=""
+                referrerpolicy="no-referrer"
+                (error)="failedImages.add(student.student_id)"
+              />
+              } @else { {{ initials(student.student_name) }} }</span
+            >
+            <div>
+              <h3>
+                {{ student.student_name }} @if (student.student_id ===
+                api.student()?.student_id) { <span class="you-chip">You</span> }
+              </h3>
+              <small>{{ student.student_id }}</small>
+            </div>
+          </div>
+          <div>
+            <span class="section-chip"
+              >{{ student.section || 'No section' }}</span
+            >
+          </div>
+          <div class="contact-details">
+            <a [href]="'mailto:' + student.email"
+              >{{ student.email || 'No email' }}</a
+            ><small>{{ student.mobile_number || 'No mobile number' }}</small>
+          </div>
+          <div>
+            @if (safeUrl(student.social_media_link)) {
+            <a
+              class="social-link"
+              [href]="safeUrl(student.social_media_link)"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Profile ↗</a
+            >
+            } @else { <span class="muted">—</span> }
+          </div>
+        </article>
+        }
+      </div>
+      <div class="table-footer">
+        Showing {{ filtered.length }} of {{ students.length }} students<span
+          >Connected. Together.</span
+        >
+      </div>
+      }
+    </section>
+  </main>
+  <footer class="page-footer">
+    <span>© 2026 Campus Connect</span><span>Your campus. Your community.</span>
+  </footer></ion-content
+>
